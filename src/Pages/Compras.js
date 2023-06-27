@@ -3,117 +3,31 @@ import React, { useEffect, useState } from 'react'
 import { show_alerta } from '../functions';
 import withReactContent from 'sweetalert2-react-content';
 import Swal from 'sweetalert2';
+import * as Contants from '../constants';
+
+import Cookies from "universal-cookie";
+import MyNavBar from '../components/MyNavBar';
+const cookies = new Cookies();
 
 const ShowProducts = () => {
-    const url = "https://localhost:44362/";
     const [products, setProducts] = useState([]);
-    const [id, setId] = useState('');
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [purchasePrice, setPurchasePrice] = useState('');
-    const [salePrice, setSalePrice] = useState('');
-    const [stock, setStock] = useState(0);
-    const [operation, setOperation] = useState(1);
-    const [title, setTitle] = useState('');
 
-    useEffect(()=>{getProducts();}, []);
+    useEffect(()=>{
+      if (!cookies.get('token')) {
+        window.location.href = './';
+      }
+      getProducts();
+    }, []);
+
     const getProducts = async () => {
-        const respuesta = await axios.get(url+'api/product/getall');
+        const respuesta = await axios.get(Contants.url+'api/product/getall');
         console.log(respuesta);
         setProducts(respuesta.data.data);
     }
-    const sarchProducts = async (event) => {
-      if(event.keyCode !== 13){
-        return;
-      }
-      const respuesta = await axios.get(url+'api/product/GetByName/'+event.target.value);
-      console.log(respuesta);
-      setProducts(respuesta.data.data);
-  }
-    
-  const openModal = (operation, id, name, description, purchasePrice, salePrice, stock) => {
-      setId('');
-      setName('');
-      setDescription('');
-      setPurchasePrice('');
-      setSalePrice('');
-      setStock(0);
-      setOperation(operation);
-      if(operation === 1){
-        setTitle('Registrar producto');
-      }else if(operation === 2){
-        setTitle('Editar producto');
-        setId(id);
-        setName(name);
-        setDescription(description);
-        setPurchasePrice(purchasePrice);
-        setSalePrice(salePrice);
-        setStock(stock);
-      }
-      window.setTimeout(function(){
-        document.getElementById('name').focus();
-      }, 500);
-  }
-
-  const validarFormulario = async ()=> {
-    let parametros;
-    let metodo;
-    let endpoint;
-    let mensaje;
-    if (name.trim() === '') {
-      show_alerta('Escribe el nombre del producto', 'warning');
-    }else if(description.trim() === ''){
-      show_alerta('Escribe la descripción del producto', 'warning');
-    }else if(isNaN(parseFloat(purchasePrice))) {
-      show_alerta('Escribe un precio de compra válido', 'warning');
-    }else if(isNaN(parseFloat(salePrice))) {
-      show_alerta('Escribe un precio de venta válido', 'warning');
-    }else if(isNaN(parseInt(stock))) {
-      show_alerta('Escribe un stock válido', 'warning');
-    }else{
-      if (operation === 1) {
-        parametros = {name: name.trim(), description: description.trim(), purchasePrice: purchasePrice, salePrice: salePrice, stock: stock};
-        metodo = 'POST';
-        endpoint = 'api/product/addproduct';
-        mensaje = 'Producto registrado exitosamente';
-      }else{
-        parametros = {id: id, name: name.trim(), description: description.trim(), purchasePrice: purchasePrice, salePrice: salePrice, stock: stock};
-        metodo = 'PUT';
-        endpoint = 'api/product/updateproduct?id='+id;
-        mensaje = 'Producto actualizado exitosamente';
-      }
-      enviarSolicitud(metodo,parametros,endpoint, mensaje);
-    }
-  }
-
-  const enviarSolicitud = async (metodo, parametros, endpoint, mensaje)=>{
-    let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJFcmlrIEzDs3BleiIsImVtYWlsIjoiZXJpa0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJuYmYiOjE2ODc4MTEyOTksImV4cCI6MTY4Nzg1NDQ5OSwiaWF0IjoxNjg3ODExMjk5fQ.oKbh7gMGKlIqJbVzHPF9tvZjkMz5mE1I2cLaQ3mAzTg';
-      await axios({method: metodo, url: url+endpoint, data: parametros, headers: {"Authorization" : `Bearer ${token}`} }).then(function(response){
-        show_alerta(mensaje, 'success');
-        document.getElementById('btnCerrar').click();
-        getProducts();
-      }).catch(function(error){
-        show_alerta('Error en la solicitud', 'error');
-        console.log(error);
-      });
-  }
-
-  const deleteProduct = (id, name)=>{
-    const MySwal = withReactContent(Swal);
-    MySwal.fire({
-      title: `¿Está seguro de eliminar el producto ${name}?`,
-      icon: 'question',
-      showCancelButton: true, confirmButtonText: 'Sí, eliminar',cancelButtonText: 'Cancelar'
-    }).then((result)=>{
-      if (result.isConfirmed) {
-       setId(id);
-       enviarSolicitud('DELETE', {}, 'api/product/removeproduct/'+id, 'Producto eliminado exitosamente'); 
-      }
-    });
-  }
 
   return (
     <div className='App'>
+      <MyNavBar></MyNavBar>
       <div className='container-fluid'>
         <div className='row mt-3'>
           <div className='col-md-4'>
