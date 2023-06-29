@@ -148,7 +148,7 @@ const ShowProducts = () => {
                       <th>DESCRIPCIÓN</th>
                       <th className={cookies.get('roleId')==='1'?'':'d-none'}>PRECIO DE COMPRA</th>
                       <th>PRECIO DE VENTA</th>
-                      <th>EXISTENCIAS</th>
+                      <th className='text-center'>EXISTENCIAS</th>
                       <th className={cookies.get('roleId')==='1'?'':'d-none'}>ACCIONES</th>
                     </tr>
                   </thead>
@@ -159,11 +159,11 @@ const ShowProducts = () => {
                           <td>{product.id}</td>
                           <td>{product.name}</td>
                           <td>{product.description}</td>
-                          <td className={cookies.get('roleId')==='1'?'':'d-none'}>${new Intl.NumberFormat('es-sv').format(product.purchasePrice)}</td>
-                          <td>${new Intl.NumberFormat('es-sv').format(product.salePrice, 2)}</td>
-                          <td>{product.stock}</td>
+                          <td className={cookies.get('roleId')==='1'?'':'d-none'}>$ {product.purchasePrice.toFixed(2)}</td>
+                          <td>$ {product.salePrice.toFixed(2)}</td>
+                          <td className='text-center'><b>{product.stock}</b></td>
                           <td className={cookies.get('roleId')==='1'?'':'d-none'}>
-                            <button onClick={()=>openModal(2, product.id, product.name, product.description, product.purchasePrice, product.salePrice, product.stock)} className='btn btn-warning' data-bs-toggle='modal' data-bs-target='#modalProducts'>
+                            <button onClick={()=>openModal(2, product.id, product.name, product.description, product.purchasePrice, product.salePrice, product.stock)} className='btn btn-warning me-2' data-bs-toggle='modal' data-bs-target='#modalProducts'>
                               <i className='fa-solid fa-edit'></i>
                             </button>
                             <button onClick={()=>deleteProduct(product.id, product.name)} className='btn btn-danger'>

@@ -62,8 +62,8 @@ const Compras = () => {
                   <thead>
                     <tr>
                       <th>#</th>
-                      <th>CLIENTE</th>
                       <th>FECHA</th>
+                      <th>CLIENTE</th>
                       <th>TOTAL</th>
                       <th>ACCIONES</th>
                     </tr>
@@ -73,9 +73,9 @@ const Compras = () => {
                       compras.map((compra, i)=>(
                         <tr key={compra.id}>
                           <td>{compra.id}</td>
-                          <td>{compra.user.name}</td>
                           <td>{moment(compra.date).format('DD MMM, YYYY hh:mm a')}</td>
-                          <td>${new Intl.NumberFormat('es-sv').format(compra.total)}</td>
+                          <td>{compra.user.name}</td>
+                          <td>$ {compra.total.toFixed(2)}</td>
                           <td><button onClick={()=>openModal(2, compra.details)} className='btn btn-info' data-bs-toggle='modal' data-bs-target='#modalDetails'>
                               <i className='fa-solid fa-info'></i>
                             </button>
@@ -83,7 +83,7 @@ const Compras = () => {
                         </tr>
                       ))
                     }
-                    { compras.length === 0?<tr><td colSpan='5' className='text-center'>Aún no hay compras</td></tr>:'' }
+                    { compras.length === 0?<tr><td colSpan='5' className='text-center'>Aún no has realizado compras.</td></tr>:'' }
                   </tbody>
                 </table>
               </div>
@@ -118,8 +118,8 @@ const Compras = () => {
                           <td>{detalle.product.name}</td>
                           <td>{detalle.product.description}</td>
                           <td>{detalle.quantity}</td>
-                          <td>${new Intl.NumberFormat('es-sv').format(detalle.product.salePrice, 2)}</td>
-                          <td>{detalle.total}</td>
+                          <td>$ {detalle.product.salePrice.toFixed(2)}</td>
+                          <td>$ {detalle.total.toFixed(2)}</td>
                         </tr>
                       ))
                     }

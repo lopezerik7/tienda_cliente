@@ -13,8 +13,8 @@ import Row from 'react-bootstrap/Row';
 import { Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Route, Router, useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 const cookies = new Cookies();
-
 
 const CreateCompra = () => {
     const [details, setDetails] = useState([]);
@@ -35,6 +35,11 @@ const CreateCompra = () => {
 
   const addProductToCart = (productId)=>{
     let quantity = parseInt(document.getElementById('quantity'+productId).value);
+
+    if (!quantity) {
+      toast.error('Agregue la cantidad a comprar');
+      return;
+    }
     let result = details.find(detail => detail.product.id === productId);
     let product = products.find(product => product.id === productId);
 
@@ -54,6 +59,7 @@ const CreateCompra = () => {
     });
     setDetails(detalles);
     setTotal(valorTotal);
+    toast.success('Se agregó el producto '+product.name+' al carrito.', {duration: 3000});
   }
 
   const addRemoveProduct = (productId, add = true)=>{
@@ -67,6 +73,7 @@ const CreateCompra = () => {
 
       if (detalles[index].quantity === 0) {
         detalles = detalles.filter(obj => obj.product.id !== productId);
+        toast.success('Se eliminó el producto del carrito.');
       }else{
         detalles[index].total =detalles[index].quantity*detalles[index].product.salePrice;
       }
@@ -102,6 +109,7 @@ const CreateCompra = () => {
 
   return (
     <div className='App'>
+      
       <MyNavBar></MyNavBar>
       <div className='container text-start'>
       <h3><i className='fa-solid fa-arrow-left' onClick={()=>window.history.back()}></i> Nueva compra</h3>
@@ -124,7 +132,7 @@ const CreateCompra = () => {
           <b>Total a pagar:</b>
         </Form.Label>
         <Col sm="10">
-          <Form.Control plaintext readOnly value={'$ '+(new Intl.NumberFormat('es-sv').format(total, 2))} />
+          <Form.Control plaintext readOnly value={'$ '+(total.toFixed(2))} className='fw-bold h5'/>
         </Col>
       </Form.Group>
       </Form>
@@ -155,8 +163,8 @@ const CreateCompra = () => {
                           <td>{detalle.product.name}</td>
                           <td>{detalle.product.description}</td>
                           <td><i className='fa-solid fa-minus' style={{color: "red"}} onClick={()=>addRemoveProduct(detalle.product.id, false)}></i> {detalle.quantity} <i className='fa-solid fa-plus' style={{color: "green"}} onClick={()=>addRemoveProduct(detalle.product.id, true)}></i></td>
-                          <td>$ {new Intl.NumberFormat('es-sv').format(detalle.product.salePrice, 2)}</td>
-                          <td>$ {new Intl.NumberFormat('es-sv').format(detalle.total, 2)}</td>
+                          <td>$ {detalle.product.salePrice.toFixed(2)}</td>
+                          <td>$ {detalle.total.toFixed(2)}</td>
                         </tr>
                       ))
                     }
@@ -186,7 +194,7 @@ const CreateCompra = () => {
                       <th>#</th>
                       <th>PRODUCTO</th>
                       <th>DESCRIPCIÓN</th>
-                      <th>DISPONIBLES</th>
+                      <th className='text-center'>DISPONIBLES</th>
                       <th>CANTIDAD A COMPRAR</th>
                       <th>PRECIO</th>
                       <th>ACCION</th>
@@ -199,9 +207,9 @@ const CreateCompra = () => {
                           <td>{product.id}</td>
                           <td>{product.name}</td>
                           <td>{product.description}</td>
-                          <td className={product.stock===0?'text-danger':''}>{product.stock}</td>
+                          <td className={product.stock===0?'text-danger text-center':'text-center'}>{product.stock}</td>
                           <td><input type='number' className='form-control' placeholder='Cantidad' id={'quantity'+product.id} disabled={product.stock===0?true:false}></input></td>
-                          <td>${new Intl.NumberFormat('es-sv').format(product.salePrice, 2)}</td>
+                          <td>${product.salePrice.toFixed(2)}</td>
                           <td><Button className='btn btn=primary' disabled={product.stock===0?true:false} onClick={()=>addProductToCart(product.id)}><i className='fa-solid fa-plus'></i> Agregar</Button></td>
                         </tr>
                       ))
