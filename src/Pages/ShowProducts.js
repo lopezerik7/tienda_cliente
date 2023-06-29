@@ -21,9 +21,6 @@ const ShowProducts = () => {
     const [title, setTitle] = useState('');
 
     useEffect(()=>{
-      if (!cookies.get('token')) {
-        window.location.href = './';
-      }
       getProducts();
     }, []);
 
@@ -125,22 +122,23 @@ const ShowProducts = () => {
   return (
     <div className='App'>
       <MyNavBar></MyNavBar>
-      <div className='container-fluid'>
+      <div className='container text-start'>
+      <h3>Productos</h3>
         <div className='row mt-3'>
-          <div className='col-md-4'>
-            <div className='d-grid mx-auto'>
+          <div className={cookies.get('roleId')==='1'?'col-md-4':'d-none'}>
+            <div className='mx-auto'>
               <button onClick={()=>openModal(1)} className='btn btn-primary' data-bs-toggle='modal' data-bs-target='#modalProducts'><i className='fa-solid fa-circle-plus'></i> Nuevo producto</button>
             </div>
           </div>
           <div className='col'></div>
           <div className='col-md-4'>
-            <div className='d-grid mx-auto'>
+            <div className=' mx-auto'>
             <input onKeyUp={(event)=>sarchProducts(event)} className='form-control' placeholder='Buscar por nombre'></input>
             </div>
           </div>
         </div>
         <div className='row mt-3'>
-            <div className='col-12 col-lg-8 offset-0 offset-lg-2'>
+            <div className='col-12'>
               <div className='table-responsive'>
                 <table className='table table-bordered table-striped'>
                   <thead>
@@ -148,9 +146,10 @@ const ShowProducts = () => {
                       <th>#</th>
                       <th>PRODUCTO</th>
                       <th>DESCRIPCIÓN</th>
-                      <th>PRECIO DE COMPRA</th>
+                      <th className={cookies.get('roleId')==='1'?'':'d-none'}>PRECIO DE COMPRA</th>
                       <th>PRECIO DE VENTA</th>
-                      <th>ACCIONES</th>
+                      <th>EXISTENCIAS</th>
+                      <th className={cookies.get('roleId')==='1'?'':'d-none'}>ACCIONES</th>
                     </tr>
                   </thead>
                   <tbody className='tblae-group-divider'>
@@ -160,9 +159,10 @@ const ShowProducts = () => {
                           <td>{product.id}</td>
                           <td>{product.name}</td>
                           <td>{product.description}</td>
-                          <td>${new Intl.NumberFormat('es-sv').format(product.purchasePrice)}</td>
+                          <td className={cookies.get('roleId')==='1'?'':'d-none'}>${new Intl.NumberFormat('es-sv').format(product.purchasePrice)}</td>
                           <td>${new Intl.NumberFormat('es-sv').format(product.salePrice, 2)}</td>
-                          <td>
+                          <td>{product.stock}</td>
+                          <td className={cookies.get('roleId')==='1'?'':'d-none'}>
                             <button onClick={()=>openModal(2, product.id, product.name, product.description, product.purchasePrice, product.salePrice, product.stock)} className='btn btn-warning' data-bs-toggle='modal' data-bs-target='#modalProducts'>
                               <i className='fa-solid fa-edit'></i>
                             </button>
