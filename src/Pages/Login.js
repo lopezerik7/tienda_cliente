@@ -59,7 +59,7 @@ class Login extends Component {
 
     componentDidMount(){
         if (cookies.get('token')) {
-            window.location.href = './home';
+            window.location.href = './';
         }
     }
 
