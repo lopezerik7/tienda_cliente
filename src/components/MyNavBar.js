@@ -19,7 +19,7 @@ function MyNavBar() {
         cookies.remove('name', { path: '/' });
         cookies.remove('email', { path: '/' });
         cookies.remove('token', { path: '/' });
-        window.location.href = './';
+        window.location.href = '/';
       }else{
         navigate('/login', { replace: true });
       }

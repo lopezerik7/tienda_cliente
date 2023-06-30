@@ -71,12 +71,12 @@ const ShowProducts = () => {
       show_alerta('Escribe el nombre del producto', 'warning');
     }else if(description.trim() === ''){
       show_alerta('Escribe la descripción del producto', 'warning');
-    }else if(isNaN(parseFloat(purchasePrice))) {
-      show_alerta('Escribe un precio de compra válido', 'warning');
-    }else if(isNaN(parseFloat(salePrice))) {
-      show_alerta('Escribe un precio de venta válido', 'warning');
-    }else if(isNaN(parseInt(stock))) {
-      show_alerta('Escribe un stock válido', 'warning');
+    }else if(isNaN(parseFloat(purchasePrice)) || purchasePrice < 0) {
+      show_alerta('Precio de compra no válido', 'warning');
+    }else if(isNaN(parseFloat(salePrice)) || salePrice < 0) {
+      show_alerta('Precio de venta no válido', 'warning');
+    }else if(isNaN(parseInt(stock)) || stock < 0) {
+      show_alerta('Stock no válido', 'warning');
     }else{
       if (operation === 1) {
         parametros = {name: name.trim(), description: description.trim(), purchasePrice: purchasePrice, salePrice: salePrice, stock: stock};
@@ -100,8 +100,13 @@ const ShowProducts = () => {
         document.getElementById('btnCerrar').click();
         getProducts();
       }).catch(function(error){
-        show_alerta('Error en la solicitud', 'error');
+        if(error.response.data.message !== undefined){
+          show_alerta(error.response.data.message, 'error');
+        }else{
+          show_alerta('Error en la solicitud', 'error');
         console.log(error);
+        }
+        
       });
   }
 
@@ -206,7 +211,7 @@ const ShowProducts = () => {
               </div>
               <div className='input-group mb-3'>
                 <span className='input-group-text'><i className='fa-solid fa-box'></i></span>
-                <input type='number' id='stock' className='form-control' placeholder='Stock' value={stock} onChange={(e)=>setStock(e.target.value)}></input>
+                <input type='number' id='stock' className='form-control' placeholder='Stock' value={stock} onChange={(e)=>setStock(e.target.value)} min='0'></input>
               </div>
             </div>
             <div className='modal-footer'>

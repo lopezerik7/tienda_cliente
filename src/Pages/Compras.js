@@ -63,7 +63,8 @@ const Compras = () => {
                     <tr>
                       <th>#</th>
                       <th>FECHA</th>
-                      <th>CLIENTE</th>
+                      <th>NOMBRE CLIENTE</th>
+                      <th>CORREO</th>
                       <th>TOTAL</th>
                       <th>ACCIONES</th>
                     </tr>
@@ -75,7 +76,8 @@ const Compras = () => {
                           <td>{compra.id}</td>
                           <td>{moment(compra.date).format('DD MMM, YYYY hh:mm a')}</td>
                           <td>{compra.user.name}</td>
-                          <td>$ {compra.total.toFixed(2)}</td>
+                          <td>{compra.user.email}</td>
+                          <td><b>$ {compra.total.toFixed(2)}</b></td>
                           <td><button onClick={()=>openModal(2, compra.details)} className='btn btn-info' data-bs-toggle='modal' data-bs-target='#modalDetails'>
                               <i className='fa-solid fa-info'></i>
                             </button>

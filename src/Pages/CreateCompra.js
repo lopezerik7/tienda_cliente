@@ -107,6 +107,17 @@ const CreateCompra = () => {
       });
   }
 
+  const validateQuantity = (productId, stock)=>{
+    let e = document.getElementById('quantity'+productId);
+    if(e.value>stock){
+      e.value = stock;
+      toast('Cantidad máxima para este producto es '+stock, {icon: '⚠'});
+    }else if(e.value<0){
+      e.value = 1;
+      toast('Cantidad mínima es 1', {icon: '⚠'});
+    }
+  }
+
   return (
     <div className='App'>
       
@@ -208,7 +219,7 @@ const CreateCompra = () => {
                           <td>{product.name}</td>
                           <td>{product.description}</td>
                           <td className={product.stock===0?'text-danger text-center':'text-center'}>{product.stock}</td>
-                          <td><input type='number' className='form-control' placeholder='Cantidad' id={'quantity'+product.id} disabled={product.stock===0?true:false}></input></td>
+                          <td><input type='number' className='form-control' placeholder='Cantidad' id={'quantity'+product.id} disabled={product.stock===0?true:false} max={product.stock} min='1' onChange={()=>validateQuantity(product.id, product.stock)}></input></td>
                           <td>${product.salePrice.toFixed(2)}</td>
                           <td><Button className='btn btn=primary' disabled={product.stock===0?true:false} onClick={()=>addProductToCart(product.id)}><i className='fa-solid fa-plus'></i> Agregar</Button></td>
                         </tr>
