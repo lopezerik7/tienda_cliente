@@ -26,7 +26,7 @@ function MyNavBar() {
     }
     const location = useLocation();
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" className="bg-body-tertiary mb-3">
       <Container>
         <Navbar.Brand href="#">Tienda</Navbar.Brand>
         

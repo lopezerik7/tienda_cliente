@@ -85,8 +85,9 @@ const Compras = () => {
                         </tr>
                       ))
                     }
-                    { compras.length === 0?<tr><td colSpan='5' className='text-center'>Aún no has realizado compras.</td></tr>:'' }
+                    { compras.length === 0?<tr><td colSpan='6' className='text-center'>Aún no has realizado compras.</td></tr>:'' }
                   </tbody>
+                  <tbody><td colSpan='6'>Total</td></tbody>
                 </table>
               </div>
             </div>
