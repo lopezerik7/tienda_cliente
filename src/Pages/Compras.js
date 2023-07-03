@@ -16,6 +16,7 @@ const cookies = new Cookies();
 const Compras = () => {
     const [compras, setCompras] = useState([]);
     const [detalles, setDetalles] = useState([]);
+    const [totalPagar, setTotal] = useState([]);
 
     useEffect(()=>{
       if (!cookies.get('token')) {
@@ -30,8 +31,9 @@ const Compras = () => {
         setCompras(respuesta.data.data);
     }
 
-    const openModal = (operation, detalles) => {
+    const openModal = (operation, detalles, totalPagar) => {
       setDetalles(detalles);
+      setTotal(totalPagar);
   }
 
   return (
@@ -45,7 +47,6 @@ const Compras = () => {
               <LinkContainer to='/compras/nueva-compra'>
               <Button className='btn btn-primary'><i className='fa-solid fa-circle-plus'></i> Nueva compra</Button>
               </LinkContainer>
-              
             </div>
           </div>
           <div className='col'></div>
@@ -78,7 +79,7 @@ const Compras = () => {
                           <td>{compra.user.name}</td>
                           <td>{compra.user.email}</td>
                           <td><b>$ {compra.total.toFixed(2)}</b></td>
-                          <td><button onClick={()=>openModal(2, compra.details)} className='btn btn-info' data-bs-toggle='modal' data-bs-target='#modalDetails'>
+                          <td><button onClick={()=>openModal(2, compra.details, compra.total)} className='btn btn-info' data-bs-toggle='modal' data-bs-target='#modalDetails'>
                               <i className='fa-solid fa-info'></i>
                             </button>
                           </td>
@@ -87,7 +88,6 @@ const Compras = () => {
                     }
                     { compras.length === 0?<tr><td colSpan='6' className='text-center'>Aún no has realizado compras.</td></tr>:'' }
                   </tbody>
-                  <tbody><td colSpan='6'>Total</td></tbody>
                 </table>
               </div>
             </div>
@@ -122,11 +122,12 @@ const Compras = () => {
                           <td>{detalle.product.description}</td>
                           <td>{detalle.quantity}</td>
                           <td>$ {detalle.product.salePrice.toFixed(2)}</td>
-                          <td>$ {detalle.total.toFixed(2)}</td>
+                          <td className='text-end'>$ {detalle.total.toFixed(2)}</td>
                         </tr>
                       ))
                     }
                   </tbody>
+                  <tbody><td colSpan='6' className='text-end fw-bold me-2'>TOTAL A PAGAR:&nbsp;&nbsp;  $ {parseFloat(totalPagar).toFixed(2)}&nbsp;&nbsp;</td></tbody>
                 </table>
               </div>
             </div>
