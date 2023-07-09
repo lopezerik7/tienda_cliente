@@ -62,12 +62,17 @@ const CreateCompra = () => {
     toast.success('Se agregó el producto '+product.name+' al carrito.', {duration: 3000});
   }
 
-  const addRemoveProduct = (productId, add = true)=>{
+  const addRemoveProduct = (productId, add = true, stock)=>{
     let detalles = details;
     let index = detalles.findIndex(detail => detail.product.id === productId);
     if (add === true) {
-      detalles[index].quantity += 1;
-      detalles[index].total =detalles[index].quantity*detalles[index].product.salePrice;
+      if(stock > detalles[index].quantity){
+        detalles[index].quantity += 1;
+        detalles[index].total =detalles[index].quantity*detalles[index].product.salePrice;
+      }else{
+        toast('Cantidad máxima para este producto es '+stock, {icon: '⚠'});
+        return;
+      }
     } else {
       detalles[index].quantity -= 1;
 
@@ -173,7 +178,7 @@ const CreateCompra = () => {
                           <td>{i+1}</td>
                           <td>{detalle.product.name}</td>
                           <td>{detalle.product.description}</td>
-                          <td><i className='fa-solid fa-minus' style={{color: "red"}} onClick={()=>addRemoveProduct(detalle.product.id, false)}></i> {detalle.quantity} <i className='fa-solid fa-plus' style={{color: "green"}} onClick={()=>addRemoveProduct(detalle.product.id, true)}></i></td>
+                          <td><i className='fa-solid fa-minus' style={{color: "red"}} onClick={()=>addRemoveProduct(detalle.product.id, false, detalle.product.stock)}></i> {detalle.quantity} <i className='fa-solid fa-plus' style={{color: "green"}} onClick={()=>addRemoveProduct(detalle.product.id, true, detalle.product.stock)}></i></td>
                           <td>$ {detalle.product.salePrice.toFixed(2)}</td>
                           <td>$ {detalle.total.toFixed(2)}</td>
                         </tr>
